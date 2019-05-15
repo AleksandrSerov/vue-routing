@@ -53,9 +53,35 @@ const View = {
     };
   },
   created() {
-    this.currentView = routes.find(
-      route => route.path === window.location.pathname
-    ).component;
+    if (this.getRouteObj() === undefined) {
+      this.currentView = {
+        template: `<h2>Not Found :(. Pick a movie from the list!</h2>`
+      };
+    } else {
+      this.currentView = this.getRouteObj().component;
+    }
+  },
+  methods: {
+    getRouteObj() {
+      return routes.find(route => route.path === window.location.pathname);
+    }
+  }
+};
+
+const Link = {
+  name: "router-link",
+  props: {
+    to: {
+      type: [String],
+      required: true
+    }
+  },
+  template: `<a @click="navigate" :href="to">{{ to }}</a>`,
+  methods: {
+    navigate(evt) {
+      evt.preventDefault();
+      window.history.pushState(null, null, this.to);
+    }
   }
 };
 
@@ -64,14 +90,16 @@ const App = {
   template: `<div id="app">
     <div class="movies">
       <h2>Which movie?</h2>
-      <a href="/dunkirk">/dunkirk</a>
-      <a href="/interstellar">/interstellar</a>
-      <a href="/the-dark-knight-rises">/the-dark-knight-rises</a>
+      <router-link to="/dunkirk">/dunkirk</router-link>
+      <router-link to="/interstellar">/interstellar</router-link>
+      <router-link to="/the-dark-knight-rises">/the-dark-knight-rises</router-link>
+
       <router-view></router-view>
     </div>
   </div>`,
   components: {
-    "router-view": View
+    "router-view": View,
+    "router-link": Link
   }
 };
 
