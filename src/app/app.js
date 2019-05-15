@@ -1,3 +1,7 @@
+import Vue from "vue";
+
+const EventBus = new Vue();
+
 const DunkirkBlurb = {
   name: "dunkirk-blurb",
   template: `<div>
@@ -60,6 +64,9 @@ const View = {
     } else {
       this.currentView = this.getRouteObj().component;
     }
+    EventBus.$on("navigate", () => {
+      this.currentView = this.getRouteObj().component;
+    });
   },
   methods: {
     getRouteObj() {
@@ -81,6 +88,7 @@ const Link = {
     navigate(evt) {
       evt.preventDefault();
       window.history.pushState(null, null, this.to);
+      EventBus.$emit("navigate");
     }
   }
 };
