@@ -111,4 +111,8 @@ const App = {
   }
 };
 
+window.addEventListener("popstate", () => {
+  EventBus.$emit("navigate");
+});
+
 export default App;
